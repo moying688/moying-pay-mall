@@ -1,0 +1,1 @@
+docker stop moying-pay-mall

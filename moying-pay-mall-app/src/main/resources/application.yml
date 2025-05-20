@@ -1,0 +1,5 @@
+spring:
+  config:
+    name: moying-pay-mall-app
+  profiles:
+    active: dev
