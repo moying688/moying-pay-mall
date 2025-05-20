@@ -3,6 +3,7 @@ package cn.org.moying.infrastructure.adapter.repository;
 import cn.org.moying.domain.order.adapter.repository.IOrderRepository;
 import cn.org.moying.domain.order.model.aggregate.CreateOrderAggregate;
 import cn.org.moying.domain.order.model.entity.OrderEntity;
+import cn.org.moying.domain.order.model.entity.PayOrderEntity;
 import cn.org.moying.domain.order.model.entity.ProductEntity;
 import cn.org.moying.domain.order.model.entity.ShopCartEntity;
 import cn.org.moying.domain.order.model.valobj.OrderStatusVO;
@@ -57,5 +58,16 @@ public class OrderRepository implements IOrderRepository {
                 .totalAmount(order.getTotalAmount())
                 .payUrl(order.getPayUrl())
                 .build();
+    }
+
+    @Override
+    public void updateOrderPayInfo(PayOrderEntity payOrderEntity) {
+        PayOrder payOrderReq = PayOrder.builder()
+                .userId(payOrderEntity.getUserId())
+                .orderId(payOrderEntity.getOrderId())
+                .status(payOrderEntity.getOrderStatus().getCode())
+                .payUrl(payOrderEntity.getPayUrl())
+                .build();
+        orderDao.updateOrderPayInfo(payOrderReq);
     }
 }
