@@ -1,1 +1,0 @@
-package cn.org.moying.infrastructure.gateway.dto;

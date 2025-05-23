@@ -46,6 +46,8 @@ public class OrderRepository implements IOrderRepository {
         order.setOrderTime(orderEntity.getOrderTime());
         order.setTotalAmount(productEntity.getPrice());
         order.setStatus(orderEntity.getOrderStatusVO().getCode());
+        order.setMarketType(orderEntity.getMarketType());
+        order.setPayAmount(productEntity.getPrice());
 
         orderDao.insert(order);
     }
@@ -70,6 +72,9 @@ public class OrderRepository implements IOrderRepository {
                 .orderTime(order.getOrderTime())
                 .totalAmount(order.getTotalAmount())
                 .payUrl(order.getPayUrl())
+                .marketType(order.getMarketType())
+                .marketDeductionAmount(order.getMarketDeductionAmount())
+                .payAmount(order.getPayAmount())
                 .build();
     }
 
@@ -80,6 +85,9 @@ public class OrderRepository implements IOrderRepository {
                 .orderId(payOrderEntity.getOrderId())
                 .status(payOrderEntity.getOrderStatus().getCode())
                 .payUrl(payOrderEntity.getPayUrl())
+                .payAmount(payOrderEntity.getPayAmount())
+                .marketDeductionAmount(payOrderEntity.getMarketDeductionAmount())
+                .marketType(payOrderEntity.getMarketType())
                 .build();
         orderDao.updateOrderPayInfo(payOrderReq);
     }
