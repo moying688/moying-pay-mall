@@ -2,6 +2,8 @@ package cn.org.moying.infrastructure.gateway;
 
 import cn.org.moying.infrastructure.gateway.dto.LockMarketPayOrderRequestDTO;
 import cn.org.moying.infrastructure.gateway.dto.LockMarketPayOrderResponseDTO;
+import cn.org.moying.infrastructure.gateway.dto.SettlementMarketPayOrderRequestDTO;
+import cn.org.moying.infrastructure.gateway.dto.SettlementMarketPayOrderResponseDTO;
 import cn.org.moying.infrastructure.gateway.response.Response;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,4 +24,13 @@ public interface IGroupBuyMarketService {
      */
     @POST("api/v1/gbm/trade/lock_market_pay_order")
     Call<Response<LockMarketPayOrderResponseDTO>> lockMarketPayOrder(@Body LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO);
+
+
+    /**
+     * 营销结算（调用外部拼团服务接口
+     * @param requestDTO 结算商品信息
+     * @return 结算结果信息
+     */
+    @POST("api/v1/gbm/trade/settlement_market_pay_order")
+    Call<Response<SettlementMarketPayOrderResponseDTO>> settlementMarketPayOrder(@Body SettlementMarketPayOrderRequestDTO requestDTO);
 }

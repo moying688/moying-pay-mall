@@ -42,7 +42,7 @@ public class NoPayNotifyOrderJob {
                 String tradeStatus = alipayTradeQueryResponse.getTradeStatus();
                 // 判断状态码
                 if ("10000".equals(code)&&"TRADE_SUCCESS".equals(tradeStatus)) {
-                    orderService.changeOrderPaySuccess(orderId);
+                    orderService.changeOrderPaySuccess(orderId,alipayTradeQueryResponse.getSendPayDate());
                 }
             }
         } catch (Exception e) {

@@ -4,6 +4,7 @@ import cn.org.moying.domain.order.adapter.port.IProductPort;
 import cn.org.moying.domain.order.adapter.repository.IOrderRepository;
 import cn.org.moying.domain.order.model.aggregate.CreateOrderAggregate;
 import cn.org.moying.domain.order.model.entity.MarketPayDiscountEntity;
+import cn.org.moying.domain.order.model.entity.OrderEntity;
 import cn.org.moying.domain.order.model.entity.PayOrderEntity;
 import cn.org.moying.domain.order.model.valobj.MarketTypeVO;
 import cn.org.moying.domain.order.model.valobj.OrderStatusVO;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -59,7 +61,7 @@ public class OrderService extends AbstractOrderService{
 
         JSONObject bizContent = new JSONObject();
         bizContent.put("out_trade_no", orderId);
-        bizContent.put("total_amount", totalAmount.toString());
+        bizContent.put("total_amount", payAmount.toString());
         bizContent.put("subject", productName);
         bizContent.put("product_code", "FAST_INSTANT_TRADE_PAY");
         request.setBizContent(bizContent.toString());
@@ -88,8 +90,28 @@ public class OrderService extends AbstractOrderService{
     }
 
     @Override
-    public void changeOrderPaySuccess(String orderId) {
-        repository.changeOrderPaySuccess(orderId);
+    public void changeOrderPaySuccess(String orderId, Date payTime) {
+
+        OrderEntity orderEntity = repository.queryOrderByOrderId(orderId);
+
+        if (null == orderEntity) {
+            return ;
+        }
+        if(MarketTypeVO.GROUP_BUY_MARKET.getCode().equals(orderEntity.getMarketType())){
+            repository.changeMarketOrderPaySuccess(orderId);
+            // 发起营销结算回调（http/rpc
+            port.settlementMarketPayOrder(orderEntity.getUserId(),orderId,payTime);
+            // todo  重试/补偿机制
+            // 发起结算的http/rpc调用可能会失败，这个时候还会有增加job任务补偿。条件为，检查一笔走了拼团的订单，超过n分钟后，仍然没有做拼团结算状态变更。
+            // 我们这里失败了，会抛异常，借助支付宝回调/job来重试。可以单独实现一个独立的job来处理。
+        }else{
+            repository.changeOrderPaySuccess(orderId,payTime);
+        }
+    }
+
+    @Override
+    public void changeOrderMarketSettlement(List<String> outTradeNoList) {
+        repository.changeOrderMarketSettlement(outTradeNoList);
     }
 
     @Override
@@ -106,5 +128,7 @@ public class OrderService extends AbstractOrderService{
     public boolean changeOrderClose(String orderId) {
         return repository.changeOrderClose(orderId);
     }
+
+
 
 }

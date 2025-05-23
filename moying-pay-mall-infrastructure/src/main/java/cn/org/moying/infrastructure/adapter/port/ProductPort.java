@@ -5,9 +5,7 @@ import cn.org.moying.domain.order.model.entity.MarketPayDiscountEntity;
 import cn.org.moying.domain.order.model.entity.ProductEntity;
 import cn.org.moying.infrastructure.gateway.IGroupBuyMarketService;
 import cn.org.moying.infrastructure.gateway.ProductRPC;
-import cn.org.moying.infrastructure.gateway.dto.LockMarketPayOrderRequestDTO;
-import cn.org.moying.infrastructure.gateway.dto.LockMarketPayOrderResponseDTO;
-import cn.org.moying.infrastructure.gateway.dto.ProductDTO;
+import cn.org.moying.infrastructure.gateway.dto.*;
 import cn.org.moying.infrastructure.gateway.response.Response;
 import cn.org.moying.types.exception.AppException;
 import com.alibaba.fastjson.JSON;
@@ -15,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import retrofit2.Call;
+
+import java.util.Date;
 
 @Component
 @Slf4j
@@ -88,6 +88,33 @@ public class ProductPort implements IProductPort {
         } catch (Exception e) {
             log.error("营销锁单失败{}", userId, e);
             return null;
+        }
+    }
+
+    @Override
+    public void settlementMarketPayOrder(String userId, String orderId, Date orderTime) {
+        SettlementMarketPayOrderRequestDTO requestDTO = new SettlementMarketPayOrderRequestDTO();
+        requestDTO.setSource(source);
+        requestDTO.setChannel(chanel);
+        requestDTO.setUserId(userId);
+        requestDTO.setOutTradeNo(orderId);
+        requestDTO.setOutTradeTime(orderTime);
+
+        try {
+            Call<Response<SettlementMarketPayOrderResponseDTO>> call = groupBuyMarketService.settlementMarketPayOrder(requestDTO);
+
+            // 获取结果
+            Response<SettlementMarketPayOrderResponseDTO> response = call.execute().body();
+            log.info("营销结算{} requestDTO:{} responseDTO:{}", userId, JSON.toJSONString(requestDTO), JSON.toJSONString(response));
+            if (null == response) return;
+
+            // 异常判断
+            if (!"0000".equals(response.getCode())) {
+                throw new AppException(response.getCode(), response.getInfo());
+            }
+
+        } catch (Exception e) {
+            log.error("营销结算失败{}", userId, e);
         }
     }
 

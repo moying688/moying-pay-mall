@@ -30,4 +30,6 @@ public class OrderEntity {
     // 支付金额
     private BigDecimal payAmount;
 
+    private String userId;
+
 }

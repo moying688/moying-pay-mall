@@ -14,8 +14,12 @@ public class PaySuccessPublisher {
     @Resource
     private RedissonClient redissonClient;
 
-    public void publish(PaySuccessMessageEvent.PaySuccessMessage message) {
+//    public void publish(PaySuccessMessageEvent.PaySuccessMessage message) {
+//
+//        redissonClient.getTopic(TOPIC).publish(message);
+//    }
+    public void publish(String messageJSON) {
 
-        redissonClient.getTopic(TOPIC).publish(message);
+        redissonClient.getTopic(TOPIC).publish(messageJSON);
     }
 }

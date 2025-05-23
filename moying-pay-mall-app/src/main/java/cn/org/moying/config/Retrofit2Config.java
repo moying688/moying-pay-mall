@@ -20,8 +20,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 @Configuration
 public class Retrofit2Config {
 
-
-
     @Value("${app.config.group-buy-market.api-url}")
     private String groupBuyMarketApiUrl;
 

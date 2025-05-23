@@ -6,6 +6,7 @@ import cn.org.moying.domain.order.model.entity.OrderEntity;
 import cn.org.moying.domain.order.model.entity.PayOrderEntity;
 import cn.org.moying.domain.order.model.entity.ShopCartEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IOrderRepository {
@@ -15,7 +16,7 @@ public interface IOrderRepository {
 
     void updateOrderPayInfo(PayOrderEntity payOrderEntity);
 
-    void changeOrderPaySuccess(String orderId);
+    void changeOrderPaySuccess(String orderId, Date payTime);
 
     List<String> queryNoPayNotifyOrder();
 
@@ -23,4 +24,9 @@ public interface IOrderRepository {
 
     boolean changeOrderClose(String orderId);
 
+    OrderEntity queryOrderByOrderId(String orderId);
+
+    void changeMarketOrderPaySuccess(String orderId);
+
+    void changeOrderMarketSettlement(List<String> outTradeNoList);
 }
