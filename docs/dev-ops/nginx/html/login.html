@@ -121,6 +121,7 @@
 
 <script>
     var sPayMallUrl = "http://127.0.0.1:8080";
+    console.log("d6911dbff9bcde118f0d1226cb744c5b".toUpperCase())
 
     document.addEventListener("DOMContentLoaded", function() {
         // ./js/v4.js 替换 https://openfpcdn.io/fingerprintjs/v4
@@ -132,7 +133,6 @@
             .then(fp => fp.get())
             .then(result => {
                 const visitorId = result.visitorId;
-
                 // 无痕登录按钮点击事件
                 const stealthLoginBtn = document.getElementById('stealth-login-btn');
                 stealthLoginBtn.addEventListener('click', () => {
@@ -187,6 +187,8 @@
                             console.error('请求失败:', error);
                         });
                 }
+
+
 
                 function setCookie(name, value, days) {
                     const date = new Date();
