@@ -49,6 +49,11 @@
             <groupId>cn.org.moying</groupId>
             <artifactId>moying-pay-mall-types</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.org.moying</groupId>
+            <artifactId>moying-pay-mall-api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

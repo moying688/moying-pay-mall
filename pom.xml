@@ -131,12 +131,15 @@
             </dependency>
 
             <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.20</version>
+            </dependency>
+            <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>3.26.0</version> <!-- 使用最新稳定版 -->
             </dependency>
-
-
 
             <!-- 工程模块 -->
             <dependency>
