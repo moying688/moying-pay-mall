@@ -111,31 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var goodsId = "9890001";
 
     // 获取信息
-    const token = getCookie("loginToken").toUpperCase();
-    console.log(token);
-    fetch(sPayMallUrl + '/api/v1/login/validate_sceneStr?sceneStr=' + token)
-        .then(res => res.json())
-        .then(data => {
-            if (data.code === "0000") {
-                const userId = data.data.userId;
-                // ✅ 这里再继续加载页面信息、下单等行为
-            } else {
-                // ❌ token 无效，跳转登录页
-                window.location.href = "login.html";
-                console.log(token);
-            }
-        })
-        .catch(err => {
-            console.error("验证失败", err);
-            window.location.href = "login.html";
-        });
-
-
-    // var userId = getCookie("loginToken");
-    // if (!userId) {
-    //     window.location.href = "login.html"; // 跳转到登录页
-    //     return;
-    // }
+    var userId = getCookie("loginToken");
+    if (!userId) {
+        window.location.href = "login.html"; // 跳转到登录页
+        return;
+    }
 
     // 请求接口数据
     fetch(groupBuyMarketUrl + '/api/v1/gbm/index/query_group_buy_market_config', {

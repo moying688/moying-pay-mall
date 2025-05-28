@@ -31,31 +31,7 @@ public class LoginController implements IAuthService {
     /*
          http://127.0.0.1:8080/api/v1/login/validate_token?token=
      */
-    @RequestMapping(value = "validate_sceneStr", method = RequestMethod.GET)
-    @Override
-    public Response<String> validateToken(@RequestParam String sceneStr) {
-        System.out.println(sceneStr);
-            log.info("验证 sceneStr 开始 sceneStr:{}", sceneStr);
-            if (StringUtils.isBlank(sceneStr)) {
-                throw new IllegalArgumentException("请求参数非法，请核实!");
-            }
-            String openidToken = loginService.checkIsLogin(sceneStr);
-            log.info("验证 token 完成 openidToken:{}", openidToken);
-            if (StringUtils.isNotBlank(openidToken)) {
-                return Response.<String>builder()
-                        .code(Constants.ResponseCode.SUCCESS.getCode())
-                        .info(Constants.ResponseCode.SUCCESS.getInfo())
-                        .data(openidToken)
-                       .build();
 
-            }
-            else {
-                return Response.<String>builder()
-                      .code(Constants.ResponseCode.NO_LOGIN.getCode())
-                      .info(Constants.ResponseCode.NO_LOGIN.getInfo())
-                      .build();
-            }
-    }
     /**
      * http://moying.natapp1.cc/api/v1/login/weixin_qrcode_ticket
      * @return

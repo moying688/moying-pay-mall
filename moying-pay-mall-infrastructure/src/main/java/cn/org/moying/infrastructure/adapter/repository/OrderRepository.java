@@ -10,6 +10,7 @@ import cn.org.moying.domain.order.model.entity.ShopCartEntity;
 import cn.org.moying.domain.order.model.valobj.OrderStatusVO;
 import cn.org.moying.infrastructure.dao.IOrderDao;
 import cn.org.moying.infrastructure.dao.po.PayOrder;
+import cn.org.moying.infrastructure.event.EventPublisher;
 import cn.org.moying.infrastructure.redis.PaySuccessPublisher;
 import cn.org.moying.types.event.BaseEvent;
 import com.alibaba.fastjson.JSON;
@@ -34,6 +35,9 @@ public class OrderRepository implements IOrderRepository {
 
     @Resource
     private PaySuccessPublisher paySuccessPublisher;
+
+    @Resource
+    private EventPublisher publisher;
 
     @Override
     public void doSaveOrder(CreateOrderAggregate orderAggregate) {
@@ -108,7 +112,8 @@ public class OrderRepository implements IOrderRepository {
         PaySuccessMessageEvent.PaySuccessMessage paySuccessMessage = paySuccessMessageEventMessage.getData();
 
 //        eventBus.post(paySuccessMessage);
-        paySuccessPublisher.publish(JSON.toJSONString(paySuccessMessage));
+//        paySuccessPublisher.publish(JSON.toJSONString(paySuccessMessage));
+        publisher.publish(paySuccessMessageEvent.topic(),  JSON.toJSONString(paySuccessMessage));
     }
 
     @Override
@@ -132,8 +137,10 @@ public class OrderRepository implements IOrderRepository {
                             .tradeNo(outTradeNo)
                             .build());
             PaySuccessMessageEvent.PaySuccessMessage paySuccessMessage  = paySuccessMessageEventMessage.getData();
-            paySuccessPublisher.publish(JSON.toJSONString(paySuccessMessage));
+//            paySuccessPublisher.publish(JSON.toJSONString(paySuccessMessage));
+
 //            eventBus.post(JSON.toJSONString(paySuccessMessage));
+            publisher.publish(paySuccessMessageEvent.topic(), JSON.toJSONString(paySuccessMessage));
         });
     }
 

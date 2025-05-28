@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 @Slf4j
-@Component
+//@Component
 public class PaySuccessSubscriber {
 
     private static final String TOPIC = "pay_success";

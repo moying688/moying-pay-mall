@@ -19,9 +19,6 @@ public class WeixinLoginService implements ILoginService {
     @Resource
     private Cache<String, String> openidToken;
 
-    @Resource
-    private RedissonClient redissonClient;
-
     @Override
     public String createQrCodeTicket() throws Exception {
         return loginPort.createQrCodeTicket();
@@ -29,39 +26,28 @@ public class WeixinLoginService implements ILoginService {
 
     @Override
     public String createQrCodeTicket(String sceneStr) throws Exception {
-        String ticket = loginPort.createQrCodeTicket();
+        String ticket = loginPort.createQrCodeTicket(sceneStr);
         // 保存浏览器指纹信息和ticket映射关系
-//        openidToken.put(sceneStr,ticket);
-        redissonClient.getBucket(sceneStr).set(ticket);
+        openidToken.put(sceneStr, ticket);
         return ticket;
     }
 
     @Override
     public String checkLogin(String ticket) {
-//        return openidToken.getIfPresent(ticket);
-        return (String) redissonClient.getBucket(ticket).get();
-    }
-
-    @Override
-    public String checkIsLogin(String sceneStr) {
-        String ticket = (String) redissonClient.getBucket(sceneStr).get();
-         return (String) redissonClient.getBucket(ticket).get(); // openId
+        return openidToken.getIfPresent(ticket);
     }
 
     @Override
     public String checkLogin(String ticket, String sceneStr) {
-//        String cacheTicket = openidToken.getIfPresent(sceneStr);
-        String cacheTicket = (String) redissonClient.getBucket(sceneStr).get();
+        String cacheTicket = openidToken.getIfPresent(sceneStr);
         if (StringUtils.isBlank(cacheTicket) || !cacheTicket.equals(ticket)) return null;
         return checkLogin(ticket);
     }
 
     @Override
     public void saveLoginState(String ticket, String openid) throws IOException {
-        // todo 关键点！此处将ticket以及用户的openid进行绑定
         // 保存登录信息
-//        openidToken.put(ticket, openid);
-        redissonClient.getBucket(ticket).set(openid);
+        openidToken.put(ticket, openid);
         // 发送模板消息
         loginPort.sendLoginTemplate(openid);
     }

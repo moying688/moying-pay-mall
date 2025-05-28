@@ -20,5 +20,4 @@ public interface ILoginService {
 
     void saveLoginState(String ticket, String openid) throws IOException;
 
-    String checkIsLogin(String sceneStr);
 }
